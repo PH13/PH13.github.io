@@ -5,6 +5,7 @@
 	<meta charset="utf-8">
 	<title> About - Peter Hagen</title>
 <link rel="stylesheet" type="text/css" media="screen" href="portstyle.css">
+<script src="https://d3js.org/d3.v4.0.0-alpha.40.min.js"></script>
 
 	<style type="text/css"></style>
 </head>
@@ -45,4 +46,78 @@
 		<a href="Peter_Hagen_Resume_2016.pdf">Resume PDF</a>
 		</p>
 
+
 </body>
+
+<canvas width="1500" height="1000"></canvas>
+<body>
+
+
+<script>
+
+var canvas = document.querySelector("canvas"),
+    context = canvas.getContext("2d"),
+    width = canvas.width,
+    height = canvas.height,
+    radius = 10;
+
+var circles = d3.range(1000).map(function(i) {
+  return {
+    x: (((i+0.5) % 50)+4) * (radius + 1) * 2,
+    y: (Math.floor(i / 50)+4) * (radius + 1) * 2
+  };
+});
+
+var simulation = d3.forceSimulation(circles)
+    .force("collide", d3.forceCollide(radius + 3).iterations(1))
+    .on("tick", drawCircles);
+
+d3.select(canvas)
+    .call(d3.drag()
+        .container(canvas)
+        .subject(dragsubject)
+        .on("start", dragstarted)
+        .on("drag", changeColor)
+        .on("drag", dragged)
+        .on("end", dragended));
+
+function changeColor() {
+  context.fillStyle = "black"
+  context.fill()
+}
+
+function drawCircles() {
+  context.clearRect(0, 0, width, height);
+  context.save();
+  context.beginPath();
+  circles.forEach(drawCircle);
+  context.fillStyle = "lightblue";
+  context.fill();
+  context.strokeStyle = "blue";
+  context.stroke();
+}
+
+function drawCircle(d) {
+  context.moveTo(d.x + radius, d.y);
+  context.arc(d.x, d.y, radius, 0, 2 * Math.PI);
+}
+
+function dragsubject() {
+  return simulation.find(d3.event.x, d3.event.y, radius);
+}
+
+function dragstarted() {
+  if (!d3.event.active) simulation.alphaTarget(0.3).restart()
+  simulation.fix(d3.event.subject);
+}
+
+function dragged() {
+  simulation.fix(d3.event.subject, d3.event.x, d3.event.y);
+}
+
+function dragended() {
+  if (!d3.event.active) simulation.alphaTarget(0);
+  simulation.unfix(d3.event.subject);
+}
+
+</script>

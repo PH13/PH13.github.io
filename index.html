@@ -11,12 +11,63 @@
 
 <style type="text/css">
 
+
+rect {
+  fill: none;
+  pointer-events: all;
+}
+
+circle {
+	fill:none;
+  stroke-width: 2px;
+}
+
 </style>
 
 </head>
 
 
 <body id="home">
+<script src="//d3js.org/d3.v3.min.js"></script>
+
+<script>
+
+var width = Math.max(960, innerWidth),
+    height = Math.max(960, innerHeight);
+
+var i = 0;
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+svg.append("rect")
+    .attr("width", width)
+    .attr("height", height)
+    .on("ontouchstart" in document ? "touchmove" : "mousemove", particle);
+
+function particle() {
+  var m = d3.mouse(this);
+
+  svg.insert("circle", "rect")
+      .attr("cx", m[0])
+      .attr("cy", m[1])
+      .attr("r", 1e-6)
+      .style("stroke", d3.hsl((i = (i + 3) % 360), 1, .5))
+      .style("stroke-opacity", 1)
+    .transition()
+      .duration(1000)
+      .attr("r", 50)
+     .transition()
+      .duration(1000)
+      .attr("r", 1e-6)
+      .style("stroke-opacity", 1e-6)
+      .remove();
+
+  d3.event.preventDefault();
+}
+
+</script>
 
 <header>
 	<h1>
@@ -48,9 +99,13 @@
 
 </header>
 
+
+
 <footer>
 	<p> 
-	The styling and format for this page are taken from <a href = "http://alignedleft.com/"> alignedleft.com</a>, created by Scott Murray. The format is temporary and will be changed soon.
+	The styling and format for this page are based on <a href = "http://alignedleft.com/"> alignedleft.com</a>, created by Scott Murray.
+
+	D3 element based on <a href = "http://bl.ocks.org/mbostock/1062544"> Mike Bostock's OMG Particles</a>
 	</p>
 </footer>
 
