@@ -69,7 +69,7 @@ var circles = d3.range(1000).map(function(i) {
 });
 
 var simulation = d3.forceSimulation(circles)
-    .force("collide", d3.forceCollide(radius + 3).iterations(1))
+    .force("collide", d3.forceCollide(radius + 2.5).iterations(1))
     .on("tick", drawCircles);
 
 d3.select(canvas)
