@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<title> About - Peter Hagen</title>
 <link rel="stylesheet" type="text/css" media="screen" href="portstyle.css">
-<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="https://d3js.org/d3.v3.min.js"></script>
 
     <style type="text/css">
         circle {
@@ -139,7 +139,7 @@
     function update(e) {
         path = path.data(d3_geom_voronoi(vertices))
         path.enter().append("path")
-            // drag node by dragging cell
+
             .call(d3.behavior.drag()
               .on("drag", function(d, i) {
                   vertices[i] = {x: vertices[i].x + d3.event.dx, y: vertices[i].y + d3.event.dy}
