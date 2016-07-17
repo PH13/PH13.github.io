@@ -185,6 +185,11 @@ nav ul li {
 	color: #999;
 }
 
+#proj_nav p span {
+	display: block;
+	margin-right: 0;
+}
+
 
 #text {
 	width: 700px;
@@ -216,7 +221,7 @@ body#home header {
 body#home header {
 	position: absolute;
 	bottom: 50%;
-	left: 25%;
+	left: 15%;
 }
 
 body#home header h1 {

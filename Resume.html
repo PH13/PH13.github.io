@@ -5,9 +5,25 @@
 	<meta charset="utf-8">
 	<title> About - Peter Hagen</title>
 <link rel="stylesheet" type="text/css" media="screen" href="portstyle.css">
-<script src="https://d3js.org/d3.v4.0.0-alpha.40.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
 
-	<style type="text/css"></style>
+    <style type="text/css">
+        circle {
+            stroke: blue;
+            fill: orange;
+            pointer-events: none;
+        }
+        line {
+            pointer-events: none;
+            stroke: #EFEDF5;
+            stroke-width: 2px;
+            opacity: .05;
+        }
+        path{
+            stroke: #EFEDF5;
+            stroke-width: 1px;
+        }
+    </style>
 </head>
 
 <body>
@@ -43,81 +59,118 @@
 	</h2>
 	<div id="text">
 		<p> 
-		<a href="Peter_Hagen_Resume_2016.pdf">Resume PDF</a>
+		<a href="Peter_Hagen_Resume_2016.pdf"><img src="images/resume.png" width="296" height="166" /> </br> Resume</a>  
 		</p>
 
+<div id="chart">
+</div>
 
-</body>
-
-<canvas width="1500" height="1000"></canvas>
-<body>
-
-
-<script>
-
-var canvas = document.querySelector("canvas"),
-    context = canvas.getContext("2d"),
-    width = canvas.width,
-    height = canvas.height,
-    radius = 10;
-
-var circles = d3.range(1000).map(function(i) {
-  return {
-    x: (((i+0.5) % 50)+4) * (radius + 1) * 2,
-    y: (Math.floor(i / 50)+4) * (radius + 1) * 2
-  };
-});
-
-var simulation = d3.forceSimulation(circles)
-    .force("collide", d3.forceCollide(radius + 2.5).iterations(1))
-    .on("tick", drawCircles);
-
-d3.select(canvas)
-    .call(d3.drag()
-        .container(canvas)
-        .subject(dragsubject)
-        .on("start", dragstarted)
-        .on("drag", changeColor)
-        .on("drag", dragged)
-        .on("end", dragended));
-
-function changeColor() {
-  context.fillStyle = "black"
-  context.fill()
-}
-
-function drawCircles() {
-  context.clearRect(0, 0, width, height);
-  context.save();
-  context.beginPath();
-  circles.forEach(drawCircle);
-  context.fillStyle = "lightblue";
-  context.fill();
-  context.strokeStyle = "blue";
-  context.stroke();
-}
-
-function drawCircle(d) {
-  context.moveTo(d.x + radius, d.y);
-  context.arc(d.x, d.y, radius, 0, 2 * Math.PI);
-}
-
-function dragsubject() {
-  return simulation.find(d3.event.x, d3.event.y, radius);
-}
-
-function dragstarted() {
-  if (!d3.event.active) simulation.alphaTarget(0.3).restart()
-  simulation.fix(d3.event.subject);
-}
-
-function dragged() {
-  simulation.fix(d3.event.subject, d3.event.x, d3.event.y);
-}
-
-function dragended() {
-  if (!d3.event.active) simulation.alphaTarget(0);
-  simulation.unfix(d3.event.subject);
-}
-
+<script type="text/javascript">
+    var w = window.innerWidth > 960 ? 960 : (window.innerWidth || 960),
+        h = window.innerHeight > 500 ? 500 : (window.innerHeight || 500),
+        radius = 5.25,
+        links = [],
+        simulate = true,
+        zoomToAdd = true,
+        // https://github.com/mbostock/d3/blob/master/lib/colorbrewer/colorbrewer.js#L105
+        color = d3.scale.quantize().domain([10000, 7250]).range(["#dadaeb","#bcbddc","#9e9ac8","#807dba","#6a51a3","#54278f","#3f007d"])
+    var numVertices = (w*h) / 3000;
+    var vertices = d3.range(numVertices).map(function(i) {
+        angle = radius * (i+10);
+        return {x: angle*Math.cos(angle)+(w/2), y: angle*Math.sin(angle)+(h/2)};
+    });
+    var d3_geom_voronoi = d3.geom.voronoi().x(function(d) { return d.x; }).y(function(d) { return d.y; })
+    var prevEventScale = 1;
+    var zoom = d3.behavior.zoom().on("zoom", function(d,i) {
+        if (zoomToAdd){
+          if (d3.event.scale > prevEventScale) {
+              angle = radius * vertices.length;
+              vertices.push({x: angle*Math.cos(angle)+(w/2), y: angle*Math.sin(angle)+(h/2)})
+          } else if (vertices.length > 2 && d3.event.scale != prevEventScale) {
+              vertices.pop();
+          }
+          force.nodes(vertices).start()
+        } else {
+          if (d3.event.scale > prevEventScale) {
+            radius+= .01
+          } else {
+            radius -= .01
+          }
+          vertices.forEach(function(d, i) {
+            angle = radius * (i+10);
+            vertices[i] = {x: angle*Math.cos(angle)+(w/2), y: angle*Math.sin(angle)+(h/2)};
+          });
+          force.nodes(vertices).start()
+        }
+        prevEventScale = d3.event.scale;
+    });
+    d3.select(window)
+      .on("keydown", function() {
+        // shift
+        if(d3.event.keyCode == 16) {
+          zoomToAdd = false
+        }
+        // s
+        if(d3.event.keyCode == 83) {
+          simulate = !simulate
+          if(simulate) {
+            force.start()
+          } else {
+            force.stop()
+          }
+        }
+      })
+      .on("keyup", function() {
+        zoomToAdd = true
+      })
+    var svg = d3.select("#chart")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h)
+            .call(zoom)
+    var force = d3.layout.force()
+            .charge(-50)
+            .size([w, h])
+            .on("tick", update);
+    force.nodes(vertices).start();
+    var circle = svg.selectAll("circle");
+    var path = svg.selectAll("path");
+    var link = svg.selectAll("line");
+    function update(e) {
+        path = path.data(d3_geom_voronoi(vertices))
+        path.enter().append("path")
+            // drag node by dragging cell
+            .call(d3.behavior.drag()
+              .on("drag", function(d, i) {
+                  vertices[i] = {x: vertices[i].x + d3.event.dx, y: vertices[i].y + d3.event.dy}
+              })
+            )
+            .style("fill", function(d, i) { return color(0) })
+        path.attr("d", function(d) { return "M" + d.join("L") + "Z"; })
+            .transition().duration(150).style("fill", function(d, i) { return color(d3.geom.polygon(d).area()) })
+        path.exit().remove();
+        circle = circle.data(vertices)
+        circle.enter().append("circle")
+              .attr("r", 0)
+              .transition().duration(1000).attr("r", 5);
+        circle.attr("cx", function(d) { return d.x; })
+              .attr("cy", function(d) { return d.y; });
+        circle.exit().transition().attr("r", 0).remove();
+        link = link.data(d3_geom_voronoi.links(vertices))
+        link.enter().append("line")
+        link.attr("x1", function(d) { return d.source.x; })
+            .attr("y1", function(d) { return d.source.y; })
+            .attr("x2", function(d) { return d.target.x; })
+            .attr("y2", function(d) { return d.target.y; })
+        link.exit().remove()
+        if(!simulate) force.stop()
+    }
 </script>
+</body>
+<footer>
+	<p> 
+	D3 element based on <a href = "http://bl.ocks.org/christophermanning/1734663"> Christopher Manning's bl.ock</a>
+	</p>
+</footer>
+
+

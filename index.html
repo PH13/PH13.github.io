@@ -52,15 +52,14 @@ function particle() {
   svg.insert("circle", "rect")
       .attr("cx", m[0])
       .attr("cy", m[1])
-      .attr("r", 1e-6)
+      .attr("r", 4)
       .style("stroke", d3.hsl((i = (i + 3) % 360), 1, .5))
       .style("stroke-opacity", 1)
     .transition()
-      .duration(1000)
-      .attr("r", 50)
-     .transition()
-      .duration(1000)
-      .attr("r", 1e-6)
+      .duration(2000)
+      .attr("r", 5)
+      .attr("cy", m[1] + 100)
+      .attr("cx", m[0] + Math.floor((Math.random()*800)+400))
       .style("stroke-opacity", 1e-6)
       .remove();
 
@@ -103,7 +102,7 @@ function particle() {
 
 <footer>
 	<p> 
-	The styling and format for this page are based on <a href = "http://alignedleft.com/"> alignedleft.com</a>, created by Scott Murray.
+	The styling and format for this website are based on <a href = "http://alignedleft.com/"> alignedleft.com</a>, created by Scott Murray.
 
 	D3 element based on <a href = "http://bl.ocks.org/mbostock/1062544"> Mike Bostock's OMG Particles</a>
 	</p>
@@ -111,16 +110,6 @@ function particle() {
 
 </body>
 
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-79505975-1', 'auto');
-  ga('send', 'pageview');
-
-</script>
 
 <html>
 

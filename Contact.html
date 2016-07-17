@@ -53,10 +53,11 @@
 		<a href = "https://www.linkedin.com/in/peterhagen13"> Linkedin </a>
 		</p>
 
-</body>
+<div id="chart">
+</div>
 <script>
-var width = 1000,
-    height = 750;
+var width = 750,
+    height = 500;
 
 var nodes = d3.range(75).map(function() { return {radius: Math.random() * 16 + 4}; }),
     root = nodes[0],
@@ -65,13 +66,13 @@ root.radius = 10;
 root.fixed = true;
 
 var force = d3.layout.force()
-    .gravity(0.01)
+    .gravity(0.05)
     .charge(function(d, i) { return i ? 0 : -1000; })
     .nodes(nodes)
     .size([width, height]);
 force.start();
 
-var svg = d3.select("body").append("svg")
+var svg = d3.select("#chart").append("svg")
     .attr("width", width)
     .attr("height", height);
 svg.selectAll("circle")
@@ -120,10 +121,12 @@ function collide(node) {
   };
 }
 </script>
-
 <footer>
 	<p> 
 	D3 element based on <a href = "https://bl.ocks.org/mbostock/3231298"> Mike Bostock's Collision Detection</a>
 	</p>
 </footer>
+</body>
+
+
 
