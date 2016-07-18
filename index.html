@@ -53,7 +53,7 @@ function particle() {
       .attr("cx", m[0])
       .attr("cy", m[1])
       .attr("r", 4)
-      .style("stroke", d3.hsl((i = (i + 3) % 360), 1, .5))
+      .style("stroke", d3.hsl((i = (i + 10) % 360), 1, .5))
       .style("stroke-opacity", 1)
     .transition()
       .duration(2000)
