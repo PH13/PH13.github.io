@@ -10,7 +10,9 @@ fieldset,img { border: 0; }
 caption,th { text-align: left; }
 /* @end */
 
-
+body {
+    background-color: #fffff7;
+}
 #main-wrapper {
     width: 960px;
     margin: 0 auto;
