@@ -1,43 +1,57 @@
-# Astro Starter Kit: Minimal
+# Peter Hagen - Portfolio Website
 
-```sh
-npm create astro@latest -- --template minimal
+Modern portfolio website built with Astro and TailwindCSS, showcasing data engineering, AI/ML, quantitative methods, and GovCon analytics work.
+
+## 🚀 Deployment
+
+This site is automatically deployed to GitHub Pages via GitHub Actions when you push to the repository.
+
+### First-time Setup
+
+1. **Enable GitHub Pages in repository settings:**
+   - Go to Settings → Pages
+   - Under "Source", select "GitHub Actions"
+
+2. **Push your changes:**
+   ```bash
+   git add .
+   git commit -m "Deploy new Astro site"
+   git push origin gh-pages
+   ```
+
+3. **Monitor deployment:**
+   - Go to the "Actions" tab in your GitHub repository
+   - You should see the "Deploy to GitHub Pages" workflow running
+   - Once complete, your site will be live at https://phizou.github.io/
+
+### Manual Deployment
+
+If you need to deploy manually:
+
+```bash
+npm run build
+# The dist/ folder contains the built site
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## 🛠️ Development
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```bash
+npm install
+npm run dev      # Start dev server at localhost:4321
+npm run build    # Build for production
+npm run preview  # Preview production build locally
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## 📁 Project Structure
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+- `src/` - Astro source files (pages, components, layouts)
+- `src/content/` - Markdown content (projects, notes)
+- `public/` - Static assets (images, PDFs, data files)
+- `dist/` - Built site (generated, don't commit)
 
-Any static assets, like images, can be placed in the `public/` directory.
+## 📝 Adding Content
 
-## 🧞 Commands
+- **New Project:** Add a `.md` file to `src/content/projects/`
+- **New Note:** Add a `.md` file to `src/content/notes/`
+- See existing files for frontmatter structure
 
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
