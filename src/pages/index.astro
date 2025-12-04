@@ -1,0 +1,35 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import SkillsOverview from "../components/SkillsOverview.astro";
+import ProjectGrid from "../components/ProjectGrid.astro";
+import { getCollection } from "astro:content";
+
+const allProjects = await getCollection("projects");
+
+// Feature a mix of real projects, prioritizing ones with actual content
+const featuredSlugs = [
+  "text-prediction-ml",
+  "d3-visualizations-portfolio",
+  "futbol-league-explorer",
+  "ai-pipeline-operational-insights",
+];
+
+const featuredProjects = featuredSlugs
+  .map((slug) => allProjects.find((p) => p.slug === slug))
+  .filter(Boolean)
+  .map((project) => ({
+    title: project.data.title,
+    slug: project.slug,
+    type: project.data.type,
+    summary: project.data.summary,
+    tags: project.data.tags || [],
+  }));
+---
+
+<BaseLayout>
+  <Hero />
+  <SkillsOverview />
+  <ProjectGrid projects={featuredProjects} />
+</BaseLayout>
+

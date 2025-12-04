@@ -1,0 +1,31 @@
+---
+import { getEntryBySlug } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import AiPipelineProject from "../../components/projects/AiPipelineProject.astro";
+import QuantModelProject from "../../components/projects/QuantModelProject.astro";
+import AwsDataPipelineProject from "../../components/projects/AwsDataPipelineProject.astro";
+import GovconAnalyticsProject from "../../components/projects/GovconAnalyticsProject.astro";
+import D3VisualizationProject from "../../components/projects/D3VisualizationProject.astro";
+
+export async function getStaticPaths() {
+  const { getCollection } = await import("astro:content");
+  const projects = await getCollection("projects");
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { data } = project;
+---
+
+<BaseLayout title={`${data.title} – Project – Peter Hagen`}>
+  {data.template === "ai-pipeline" && <AiPipelineProject project={project} />}
+  {data.template === "quant-model" && <QuantModelProject project={project} />}
+  {data.template === "aws-data-pipeline" && <AwsDataPipelineProject project={project} />}
+  {data.template === "govcon-analytics" && <GovconAnalyticsProject project={project} />}
+  {data.template === "d3-visualization" && <D3VisualizationProject project={project} />}
+</BaseLayout>
+
+
